@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'idea'
+    id 'pmd'
+    id 'checkstyle'
+
+    id 'com.github.spotbugs' version '4.6.0'
+    id 'io.freefair.lombok' version '5.3.0'
+    id 'com.github.ben-manes.versions' version '0.36.0'
+
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+
+    id "com.vaadin" version "0.7.0"
+}
+apply from: './gradle/dependencies.gradle'
+apply from: './gradle/checking.gradle'
+apply from: './gradle/testing.gradle'
+
+generateLombokConfig.enabled = false
+
+group = theGroup
+archivesBaseName = theArchivesBaseName
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+compileJava {
+    options.encoding = 'UTF-8'
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = '6.6'
+    doLast {
+        delete "$projectDir/gradlew.bat", "$projectDir/gradlew"
+    }
+}
+vaadin {
+    productionMode = true
+}
+classes {
+    doLast {
+        def resourcesDir = sourceSets.main.output.resourcesDir as File
+        def releaseVersion = System.env.RELEASE_VERSION as String
+        if (releaseVersion) {
+            new File(resourcesDir, "version.info").text = releaseVersion
+        }
+    }
+}
