@@ -3,7 +3,7 @@ services:
   allure-server:
     # For local debug #
     # build: .
-    image: kochetkovma/allure-server:latest
+    image: arosado101/allure-server:latest
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/allure
       SPRING_DATASOURCE_USERNAME: postgres
@@ -11,7 +11,7 @@ services:
       SPRING_JPA_DATABASE: postgresql
       SPRING_JPA_HIBERNATE_DDL-AUTO: update # Careful! 'create' destroy data! https://stackoverflow.com/questions/21113154/spring-boot-ddl-auto-generator
     ports:
-      - 8080:8080
+      - 8081:8081
     volumes:
       - ./ext:/ext:rw
       - ./allure-server-store:/allure:rw
